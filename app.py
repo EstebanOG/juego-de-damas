@@ -75,6 +75,8 @@ class App():
             if self.tablero[y//70][x//70] == 'n':
                 self.interfaz.create_oval(x//70*self.cuadrado, y//70*self.cuadrado, (x//70+1)*self.cuadrado, (y//70+1)*self.cuadrado, fill="black",outline='red')
                 self.seleccionado=True
+                self.seleccionado_x = y//70
+                self.seleccionado_y = x//70
     
     def destino(self, x, y):
         x = x // 70
@@ -82,6 +84,81 @@ class App():
         if self.turno:  
             print(f'Origen: x:{self.seleccionado_x}, y:{self.seleccionado_y}')
             print(f'Destino: x:{y}, y:{x}')
+            if y == self.seleccionado_x + 1 and (x == self.seleccionado_y - 1 or x == self.seleccionado_y + 1) and (self.tablero[y][x] != 'b' and self.tablero[y][x] != 'n'):
+                print('Se puede mover')
+                self.tablero[y][x] = 'b'
+                self.tablero[self.seleccionado_x][self.seleccionado_y] = '-'
+                self.imprimir_tablero()
+                self.interfaz.delete("all")
+                self.dibujar_tablero()
+                self.dibujar_fichas()
+                self.turno = False
+                self.seleccionado = False
+            elif y == self.seleccionado_x + 2 and x == self.seleccionado_y - 2 and self.tablero[y-1][x+1] == 'n' and (self.tablero[y][x] != 'b' and self.tablero[y][x] != 'n'): 
+                print(f'Destino: x:{y}, y:{x}')
+                print(f'A eliminar: x:{y-1}, y:{x-1}')
+                self.tablero[y][x] = 'b'
+                self.tablero[y-1][x+1] = '-'
+                self.tablero[self.seleccionado_x][self.seleccionado_y] = '-'
+                self.imprimir_tablero()
+                self.interfaz.delete("all")
+                self.dibujar_tablero()
+                self.dibujar_fichas()
+                self.turno = False
+                self.seleccionado = False
+            elif y == self.seleccionado_x + 2 and x == self.seleccionado_y + 2 and self.tablero[y-1][x-1] == 'n' and (self.tablero[y][x] != 'b' and self.tablero[y][x] != 'n'):
+                print(f'Destino: x:{y}, y:{x}')
+                print(f'A eliminar: x:{y-1}, y:{x-1}')
+                self.tablero[y][x] = 'b'
+                self.tablero[y-1][x-1] = '-'
+                self.tablero[self.seleccionado_x][self.seleccionado_y] = '-'
+                self.imprimir_tablero()
+                self.interfaz.delete("all")
+                self.dibujar_tablero()
+                self.dibujar_fichas()
+                self.turno = False
+                self.seleccionado = False
+            else:
+                print('No se puede mover')
+        else:
+            print(f'Origen: x:{self.seleccionado_x}, y:{self.seleccionado_y}')
+            print(f'Destino: x:{y}, y:{x}')
+            if y == self.seleccionado_x - 1 and (x == self.seleccionado_y - 1 or x == self.seleccionado_y + 1) and (self.tablero[y][x] != 'b' and self.tablero[y][x] != 'n'):
+                print('Se puede mover')
+                self.tablero[y][x] = 'n'
+                self.tablero[self.seleccionado_x][self.seleccionado_y] = '-'
+                self.imprimir_tablero()
+                self.interfaz.delete("all")
+                self.dibujar_tablero()
+                self.dibujar_fichas()
+                self.turno = True
+                self.seleccionado = False
+            elif y == self.seleccionado_x - 2 and x == self.seleccionado_y - 2 and self.tablero[y+1][x+1] == 'b' and (self.tablero[y][x] != 'b' and self.tablero[y][x] != 'n'): 
+                print(f'Destino: x:{y}, y:{x}')
+                print(f'A eliminar: x:{y-1}, y:{x-1}')
+                self.tablero[y][x] = 'n'
+                self.tablero[y+1][x+1] = '-'
+                self.tablero[self.seleccionado_x][self.seleccionado_y] = '-'
+                self.imprimir_tablero()
+                self.interfaz.delete("all")
+                self.dibujar_tablero()
+                self.dibujar_fichas()
+                self.turno = True
+                self.seleccionado = False
+            elif y == self.seleccionado_x - 2 and x == self.seleccionado_y + 2 and self.tablero[y+1][x-1] == 'b' and (self.tablero[y][x] != 'b' and self.tablero[y][x] != 'n'):
+                print(f'Destino: x:{y}, y:{x}')
+                print(f'A eliminar: x:{y-1}, y:{x-1}')
+                self.tablero[y][x] = 'n'
+                self.tablero[y+1][x-1] = '-'
+                self.tablero[self.seleccionado_x][self.seleccionado_y] = '-'
+                self.imprimir_tablero()
+                self.interfaz.delete("all")
+                self.dibujar_tablero()
+                self.dibujar_fichas()
+                self.turno = True
+                self.seleccionado = False
+            else:
+                print('No se puede mover')
             
 
     def imprimir_tablero(self):
