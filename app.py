@@ -1,4 +1,6 @@
+from re import S
 import tkinter as tk
+from tkinter import messagebox as MessageBox
 class App():
 
     tablero = [['-', 'b', '-', 'b', '-', 'b', '-', 'b'],
@@ -101,6 +103,7 @@ class App():
                 self.interfaz.delete("all")
                 self.dibujar_tablero()
                 self.dibujar_fichas()
+                self.verificarFinJuego()
             elif y == self.seleccionado_x + 2 and x == self.seleccionado_y - 2 and ((self.tablero[self.seleccionado_x][self.seleccionado_x] == 'b' and self.tablero[y-1][x+1] == 'n' or 'nr') or (self.tablero[self.seleccionado_x][self.seleccionado_x] == 'nr' and self.tablero[y-1][x+1] == 'b' or 'br')) and (self.tablero[y][x] != 'b' and self.tablero[y][x] != 'n' and self.tablero[y][x] != 'nr' and self.tablero[y][x] != 'br'): 
                 print(f'Destino: x:{y}, y:{x}')
                 print(f'A eliminar: x:{y-1}, y:{x-1}')
@@ -122,6 +125,7 @@ class App():
                 self.interfaz.delete("all")
                 self.dibujar_tablero()
                 self.dibujar_fichas()
+                self.verificarFinJuego()
             elif y == self.seleccionado_x + 2 and x == self.seleccionado_y + 2 and ((self.tablero[self.seleccionado_x][self.seleccionado_x] == 'b' and self.tablero[y-1][x-1] == 'n' or 'nr') or (self.tablero[self.seleccionado_x][self.seleccionado_x] == 'nr' and self.tablero[y-1][x-1] == 'b' or 'br')) and (self.tablero[y][x] != 'b' and self.tablero[y][x] != 'n' and self.tablero[y][x] != 'nr' and self.tablero[y][x] != 'br'):
                 print(f'Destino: x:{y}, y:{x}')
                 print(f'A eliminar: x:{y-1}, y:{x-1}')
@@ -143,6 +147,7 @@ class App():
                 self.interfaz.delete("all")
                 self.dibujar_tablero()
                 self.dibujar_fichas()
+                self.verificarFinJuego()
             else:
                 print('No se puede mover')
         if (not self.turno or self.tablero[self.seleccionado_x][self.seleccionado_y] == 'br' or self.tablero[self.seleccionado_x][self.seleccionado_y] == 'nr') and self.seleccionado:
@@ -167,6 +172,7 @@ class App():
                 self.interfaz.delete("all")
                 self.dibujar_tablero()
                 self.dibujar_fichas()
+                self.verificarFinJuego()
                 
             elif y == self.seleccionado_x - 2 and x == self.seleccionado_y - 2 and ((self.tablero[self.seleccionado_x][self.seleccionado_x] == 'n' and self.tablero[y+1][x+1] == 'b' or 'br') or (self.tablero[self.seleccionado_x][self.seleccionado_x] == 'br' and self.tablero[y+1][x+1] == 'n' or 'nr')) and (self.tablero[y][x] != 'b' and self.tablero[y][x] != 'n' and self.tablero[y][x] != 'nr' and self.tablero[y][x] != 'br'): 
                 print(f'Destino: x:{y}, y:{x}')
@@ -189,10 +195,11 @@ class App():
                 self.interfaz.delete("all")
                 self.dibujar_tablero()
                 self.dibujar_fichas()
+                self.verificarFinJuego()
 
             elif y == self.seleccionado_x - 2 and x == self.seleccionado_y + 2 and ((self.tablero[self.seleccionado_x][self.seleccionado_x] == 'n' and self.tablero[y+1][x-1] == 'b' or 'br') or (self.tablero[self.seleccionado_x][self.seleccionado_x] == 'br' and self.tablero[y+1][x-1] == 'n' or 'nr')) and (self.tablero[y][x] != 'b' and self.tablero[y][x] != 'n' and self.tablero[y][x] != 'nr' and self.tablero[y][x] != 'br'):
-                print(f'Destino: x:{y}, y:{x}')
-                print(f'A eliminar: x:{y-1}, y:{x-1}')
+                #print(f'Destino: x:{y}, y:{x}')
+                #print(f'A eliminar: x:{y-1}, y:{x-1}')
                 if (y == 0 or self.tablero[self.seleccionado_x][self.seleccionado_x] == 'n') or self.tablero[self.seleccionado_x][self.seleccionado_x] == 'nr':
                     self.tablero[y][x] = 'nr'
                     self.turno = True
@@ -207,16 +214,60 @@ class App():
                     self.seleccionado = False
                 self.tablero[y+1][x-1] = '-'
                 self.tablero[self.seleccionado_x][self.seleccionado_y] = '-'
-                self.imprimir_tablero()
+                #self.imprimir_tablero()
                 self.interfaz.delete("all")
                 self.dibujar_tablero()
                 self.dibujar_fichas()
+                self.verificarFinJuego()
             else:
-                print('No se puede mover')
+                pass
+                #print('No se puede mover')
             
     def imprimir_tablero(self):
         print(self.tablero)
 
+    def verificarFinJuego(self):
+        cantidad_fichas_blancas = 0
+        cantidad_fichas_negras = 0
+        for i in self.tablero:
+            for j in i:
+                if j == "b" or j == "br":
+                    cantidad_fichas_blancas = cantidad_fichas_blancas + 1
+                if j == "n" or j == "nr":
+                    cantidad_fichas_negras = cantidad_fichas_negras + 1
+        
+        if cantidad_fichas_blancas == 0:
+            print('Gana negro')
+            MessageBox.showinfo("Fin del Juego", "El ganador es el jugador 2(Fichas negras).") # título, mensaje
+            resultado = MessageBox.askquestion("Fin del juego", 
+            "¿Desea Jugar nuevamente?")
+            if resultado == "yes":
+                self.reiniciarJuego()
+            else:
+                self.ventana.destroy()
+        elif cantidad_fichas_negras == 0:
+            print('Gana blanco')
+            MessageBox.showinfo("Fin del Juego", "El ganador es el jugador 1(Fichas Blancas).") # título, mensaje
+            resultado = MessageBox.askquestion("Fin del juego", "¿Desea Jugar nuevamente?")
+            if resultado == "yes":
+                self.reiniciarJuego()
+            else:
+                self.ventana.destroy()
+        else:
+            print("Continua")
+
+        
+    def reiniciarJuego(self):
+        self.tablero = [['-', 'b', '-', 'b', '-', 'b', '-', 'b'],
+                        ['b', '-', 'b', '-', 'b', '-', 'b', '-'],
+                        ['-', 'b', '-', 'b', '-', 'b', '-', 'b'],
+                        ['-', '-', '-', '-', '-', '-', '-', '-'],
+                        ['-', '-', '-', '-', '-', '-', '-', '-'],
+                        ['n', '-', 'n', '-', 'n', '-', 'n', '-'],
+                        ['-', 'n', '-', 'n', '-', 'n', '-', 'n'],
+                        ['n', '-', 'n', '-', 'n', '-', 'n', '-']]
+        self.dibujar_tablero()
+        self.dibujar_fichas()
 motordams = App(70)
 motordams.inicio_juego()
 motordams()
